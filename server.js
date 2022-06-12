@@ -1,7 +1,9 @@
-const { createServer } = require('http');
+const express = require('express');
+const app = express();
+const { createServer } = require('https');
 const { Server } = require('socket.io');
 
-const myServer = createServer();
+const myServer = createServer(app);
 const io = new Server(myServer, { 
     cors: {
       origin:'*'
@@ -30,6 +32,6 @@ io.use((socket, next) => {
   next();
 });
 
-io.listen(8080,()=>{
+myServer.listen(8080,()=>{
   console.log('listen at server..');
 });
