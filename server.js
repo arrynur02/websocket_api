@@ -4,7 +4,7 @@ const { Server } = require('socket.io');
 const myServer = createServer();
 const io = new Server(myServer, { 
     cors: {
-      origin:'https://qr.buildercorp.id'
+      origin:'*'
     } 
 });
 
@@ -30,6 +30,6 @@ io.use((socket, next) => {
   next();
 });
 
-myServer.listen(4040,()=>{
+io.listen(8080,()=>{
   console.log('listen at server..');
 });
