@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title> Simple Api Websockets By Buildercorp </title>
+	<link rel="stylesheet" type="text/css" href="/public/bootstrap5/css/bootstrap.min.css">
+	<style>
+		html,
+		body{
+			text-align:center;
+			background-color:#cecece;
+		}
+		h2{
+			text-align: center;
+			font-family: sans-serif, monospace;
+			font-weight: bold;
+		}
+		.form-result{
+			padding:50px;
+		}
+	</style>
+</head>
+<body>
+	
+	<h2> Api Websockets </h2>
+	
+	<div class="container">
+	<div class="form-result">
+		<table class="w-100">
+			<tr>
+				<th>Connect sid : </th>
+				<td><span id="sid-socket"></span></td>
+			</tr>
+			<tr>
+				<th>Results at : </th>
+				<td><span id="r-socket"></span></td>
+			</tr>
+			<tr>
+				<th>Results status : </th>
+				<td><span id="rstatus-socket"></span></td>
+			</tr>
+		</table>				
+	</div>
+
+		<form action="/sending_api?token=aksdamuc9ch37e72wecwexzewz3234234555" method="POST">
+			<div class="input-group mb-2">
+				<input type="text" name="data_input" class="form-control" placeholder="enter your message.." required>
+				<button type="submit" class="btn btn-primary"> submit </button>
+			</div>
+		</form>
+	</div>
+
+	<script src="/socket-client/socket.io.js"></script>
+	<script>
+		var socket = io('ws://localhost:3000');
+
+		socket.on('connect', (sockets) => {
+			on('#sid-socket').innerHTML=socket.id;
+			console.log(socket.id);
+		})
+
+		function on(select){
+			return document.querySelector(select);
+		}
+
+		socket.on('ondata', (response) => {
+			// alert(data);
+			on('#r-socket').innerHTML=response.data;
+			on('#rstatus-socket').innerHTML=response.text;
+		})
+
+	</script>
+</body>
+</html>
