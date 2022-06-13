@@ -16,7 +16,9 @@ const io = new Server(server, {
     } 
 });
 
-app.use(cors());
+app.use(cors({
+    origin:["https://qr.buildercorp.id","https://103.134.152.9:8080","*"]
+}))
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 // parse application/json
@@ -60,11 +62,6 @@ app.get('/',(req, res) => {
 });
 
 app.get('/apisocks',(req, res) => {
-
-    res.header("Access-Control-Allow-Origin","*");
-    res.header("Access-Control-Allow-Headers","Content-Type, Content-Length, Authorization, Accept, X-Requested-With");
-    res.header("Access-Control-Allow-Methods","PUT, POST, GET, DELETE, OPTIONS");
-
     let token = req.query.token;
     if (token!==process.env.TOKEN){
       res.redirect('/');
