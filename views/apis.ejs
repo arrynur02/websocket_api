@@ -43,32 +43,57 @@
 		</table>				
 	</div>
 
-		<form action="/sending_api?token=aksdamuc9ch37e72wecwexzewz3234234555" method="POST">
+		<form id="f-submit">
 			<div class="input-group mb-2">
-				<input type="text" name="data_input" class="form-control" placeholder="enter your message.." required>
-				<button type="submit" class="btn btn-primary"> submit </button>
+				<input type="text" name="data_input" class="form-control" placeholder="test your message.." required>
+				<button type="submit" class="btn btn-primary btn-submit"> submit </button>
 			</div>
 		</form>
 	</div>
 
 	<script src="/socket-client/socket.io.js"></script>
 	<script>
-		var socket = io('ws://localhost:3000');
+		var socket = new WebSocket("ws://localhost:3020");
 
-		socket.on('connect', (sockets) => {
-			on('#sid-socket').innerHTML=socket.id;
-			console.log(socket.id);
-		})
-
-		function on(select){
-			return document.querySelector(select);
+		function receiver(id, data){
+			return JSON.stringify({
+				type: "message",
+			    text: data,
+			    id:   id,
+			    date: Date.now()
+			});
 		}
 
-		socket.on('ondata', (response) => {
-			// alert(data);
-			on('#r-socket').innerHTML=response.data;
-			on('#rstatus-socket').innerHTML=response.text;
-		})
+		function s(select){
+			return document.querySelector(select)
+		}
+		// function on(event, cb) {
+		// 	return document.addEventListener(event, cb)
+		// }
+
+		socket.onopen = function (event){
+		  // socket.send(receiver('asidasyudgasyudgu', s('input[name="data_input"]').value));
+		};
+		
+		socket.onmessage = function (event){
+		  let data = JSON.parse(event.data);
+		  if (data){
+		  	s('#sid-socket').innerHTML=data.id;
+		  	s('#r-socket').innerHTML=data.status;
+			s('#rstatus-socket').innerHTML=data.text;
+		  }
+		}
+
+		s('#f-submit').addEventListener('submit', function(e){
+			e.preventDefault();
+			socket.send(receiver('<%= uid %>',s('input[name="data_input"]').value));
+		});
+
+		// socket.on('ondata', (response) => {
+		// 	// alert(data);
+		// 	on('#r-socket').innerHTML=response.data;
+		// 	on('#rstatus-socket').innerHTML=response.text;
+		// })
 
 	</script>
 </body>
