@@ -10,6 +10,11 @@ const { Server } = require('socket.io');
 
 require('dotenv').config({ path:'.env' });
 
+const option = {
+  key:fs.readFileSync('key.key'),
+  cert:fs.readFileSync('key.crt')
+}
+
 const server = http.createServer(app);
 
 app.use(cors({
@@ -50,7 +55,7 @@ function msgWebsocket(id, data, status){
   });
 }
 
-wss.on('connection', function connection(ws, req) {
+wss.on('connection', function connection(ws, req){
   ws.on('message', function message(data, isBinary) {
     wss.clients.forEach(function each(client) {
       // console.log(client);
