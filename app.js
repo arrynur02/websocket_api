@@ -15,7 +15,7 @@ const option = {
   cert:fs.readFileSync('key.crt')
 }
 
-const server = http.createServer(app);
+const server = http.createServer(option, app);
 
 app.use(cors({
     origin:["https://qr.buildercorp.id","https://103.134.152.9:8080","*"]
@@ -55,17 +55,29 @@ function msgWebsocket(id, data, status){
   });
 }
 
-wss.on('connection', function connection(ws, req){
-  ws.on('message', function message(data, isBinary) {
-    wss.clients.forEach(function each(client) {
-      // console.log(client);
-      if (client.readyState) {
-        client.send(data, { binary: isBinary });
-      }
-    });
-  });
+// wss.on('connection', function connection(ws, req){
+//   ws.on('message', function message(data, isBinary) {
+//     wss.clients.forEach(function each(client) {
+//       // console.log(client);
+//       if (client.readyState) {
+//         client.send(data, { binary: isBinary });
+//       }
+//     });
+//   });
 
-  ws.send(msgWebsocket(getId(15),'connect user..',200));
+//   ws.send(msgWebsocket(getId(15),'connect user..',200));
+// });
+
+var port = process.env.PORT||5000;
+
+server.listen(port,() => {
+  console.log('listen server at http://localhost:'+port);
+});
+
+io.on('connection', (socket) => {
+  socket.on('data', (data) => {
+    io.emit('data', data);
+  });
 });
 
 app.get('/',(req, res) => {
@@ -100,9 +112,3 @@ app.post('/sending_api',(req, res) => {
   }
 });
 
-
-var port = process.env.PORT||5000;
-
-server.listen(port,() => {
-  console.log('listen server at http://localhost:'+port);
-});
